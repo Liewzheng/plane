@@ -95,6 +95,7 @@ function CustomMenu(props: ICustomMenuDropdownProps) {
 
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: placement ?? "auto",
+    strategy: "fixed",
   });
 
   const closeAllSubmenus = React.useCallback(() => {
