@@ -100,7 +100,6 @@ export const DateDropdown = observer(function DateDropdown(props: Props) {
     (node: HTMLDivElement | null) => {
       setPopperElement(node);
       if (node && update) {
-        // Use requestAnimationFrame to ensure the DOM has updated before calculating position
         requestAnimationFrame(() => {
           update();
         });
@@ -108,6 +107,15 @@ export const DateDropdown = observer(function DateDropdown(props: Props) {
     },
     [update]
   );
+
+  // Also force update when isOpen changes to true and both elements are available
+  useEffect(() => {
+    if (isOpen && referenceElement && popperElement && update) {
+      requestAnimationFrame(() => {
+        update();
+      });
+    }
+  }, [isOpen, referenceElement, popperElement, update]);
 
   const isDateSelected = value && value.toString().trim() !== "";
 
