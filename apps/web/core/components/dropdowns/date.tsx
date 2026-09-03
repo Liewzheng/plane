@@ -4,7 +4,7 @@
  * See the LICENSE file for details.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { observer } from "mobx-react";
 import { createPortal } from "react-dom";
 import { usePopper } from "react-popper";
@@ -82,7 +82,7 @@ export const DateDropdown = observer(function DateDropdown(props: Props) {
   const [referenceElement, setReferenceElement] = useState<HTMLButtonElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
   // popper-js init
-  const { styles, attributes, update } = usePopper(referenceElement, popperElement, {
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: placement ?? "bottom-start",
     strategy: "fixed",
     modifiers: [
@@ -94,20 +94,6 @@ export const DateDropdown = observer(function DateDropdown(props: Props) {
       },
     ],
   });
-
-  // Force Popper to recalculate position when popperElement is set
-  const setPopperElementWithUpdate = useCallback(
-    (node: HTMLDivElement | null) => {
-      setPopperElement(node);
-      if (node && update) {
-        // Use requestAnimationFrame to ensure the DOM has updated before calculating position
-        requestAnimationFrame(() => {
-          update();
-        });
-      }
-    },
-    [update]
-  );
 
   const isDateSelected = value && value.toString().trim() !== "";
 
@@ -202,7 +188,7 @@ export const DateDropdown = observer(function DateDropdown(props: Props) {
                 "z-30 my-1 overflow-hidden rounded-md border-[0.5px] border-strong bg-surface-1 shadow-raised-200",
                 optionsClassName
               )}
-              ref={setPopperElementWithUpdate}
+              ref={setPopperElement}
               style={styles.popper}
               {...attributes.popper}
             >
